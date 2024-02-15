@@ -12,9 +12,9 @@ class Node{
 };
 
 class DoubleLinkedList{
+    int size;
     Node* head;
     Node* tail;
-    int size;
     public:
         DoubleLinkedList() : head(NULL) , tail(NULL) ,size(0) {} ;
 
@@ -28,6 +28,8 @@ class DoubleLinkedList{
         void deleteAtIndex(int);
         int len();
         void display();
+        void Reverse();
+        // void reverseRecursion(Node*,Node*,int);
 
 };
 int DoubleLinkedList :: len(){
@@ -125,6 +127,41 @@ void DoubleLinkedList :: deleteAtIndex(int pos){
         temp->next->prev = temp->prev;
     }
 }
+
+void DoubleLinkedList :: Reverse(){
+    if(!head || !tail) return ;
+    Node* curr = head;
+    while(curr!=nullptr){
+        Node* next_item_ptr = curr->next;
+        curr->next = curr->prev;
+        curr->prev = next_item_ptr;
+        curr = next_item_ptr;
+    }
+
+    // Now swap head and tail
+    swap(head,tail);
+    return;
+
+}
+
+// void DoubleLinkedList :: reverseRecursion(Node* curr,Node* next_item_ptr,int l){
+//     if(l==len()){
+//         swap(head,tail);
+//         return ;
+//     }
+//     if(next_item_ptr!=nullptr && curr->next!=nullptr){
+
+//         curr->next = curr->prev;
+//         curr->prev = next_item_ptr;
+//         next_item_ptr = curr->next; // Save the next pointer before updating it
+
+//         curr = next_item_ptr;
+//         reverseRecursion(curr, next_item_ptr,l+1);
+
+//     }
+
+// }
+
 void DoubleLinkedList :: display(){
     if(head && tail){
         Node* temp = head;
@@ -155,6 +192,9 @@ int main(){
     dll.display();
 
     dll.deleteAtIndex(3);
+    dll.display();
+
+    dll.Reverse();
     dll.display();
 
     return 0;
