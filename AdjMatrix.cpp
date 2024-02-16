@@ -2,8 +2,8 @@
 #include<map>
 #include<vector>
 using namespace std;
-
-void getAdjMatrix(int n , map<int,int>mp){
+// Array implementation of Graph
+void printAdjMatrix(int n , map<int,int>mp){
     
     // Created a nxn matrix with all zeros 
     vector<vector<int>> adjMatrix(n,vector<int>(n,0));
@@ -46,7 +46,7 @@ int main(){
 
     }
 
-    getAdjMatrix(N,mp);
+    printAdjMatrix(N,mp);
     cout << endl;
 
     return 0;
