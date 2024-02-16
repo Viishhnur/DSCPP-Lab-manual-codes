@@ -1,85 +1,63 @@
-// C++ implementation of Radix Sort
-
-#include <iostream>
+#include<iostream>
 using namespace std;
 
-// A utility function to get maximum
-// value in arr[]
-int getMax(int arr[], int n)
-{
-	int mx = arr[0];
-	for (int i = 1; i < n; i++)
-		if (arr[i] > mx)
-			mx = arr[i];
-	return mx;
+int getMax(int arr[],int n){
+    int maxnum = INT16_MIN;
+    for(int i=0;i<n;i++){
+        if(arr[i]>maxnum){
+            maxnum = arr[i];
+        }
+    }
+    return maxnum;
 }
 
-// A function to do counting sort of arr[]
-// according to the digit
-// represented by exp.
-void countSort(int arr[], int n, int exp)
-{
+void countSort(int arr[],int n,int pos){
+    // Create a freqency array
+    int freq[10] = {0};
 
-	// Output array
-	int output[n];
-	int i, count[10] = { 0 };
+    // Now caluclate the frequencies
+    for(int i=0;i<n;i++){
+        int digit = (arr[i] / pos) % 10 ;
+        freq[digit]++;
+    }
 
-	// Store count of occurrences
-	// in count[]
-	for (i = 0; i < n; i++)
-		count[(arr[i] / exp) % 10]++;
+    // caluclate cumulative frequency
+    for(int i=1;i<10;i++){
+        freq[i] += freq[i-1];
+    }
 
-	// Change count[i] so that count[i]
-	// now contains actual position
-	// of this digit in output[]
-	for (i = 1; i < 10; i++)
-		count[i] += count[i - 1];
+    // create a answer array
+    int ans[n];
+    for(int i=n-1;i>=0;i--){
+        ans[--freq[(arr[i]/pos)%10]] = arr[i];
+    }
 
-	// Build the output array
-	for (i = n - 1; i >= 0; i--) {
-		output[count[(arr[i] / exp) % 10] - 1] = arr[i];
-		count[(arr[i] / exp) % 10]--;
-	}
+    // copy elements back into the array
+    for(int i=0;i<n;i++){
+        arr[i] = ans[i] ;
+    }
 
-	// Copy the output array to arr[],
-	// so that arr[] now contains sorted
-	// numbers according to current digit
-	for (i = 0; i < n; i++)
-		arr[i] = output[i];
 }
+void radixSort(int arr[],int n){
 
-// The main function to that sorts arr[]
-// of size n using Radix Sort
-void radixsort(int arr[], int n)
-{
+    // step-1 , get the max element 
+    int max_ele = getMax(arr,n);
+    for(int pos=1;max_ele/pos>0 ; pos*=10){
+        countSort(arr,n,pos);
+    }
 
-	// Find the maximum number to
-	// know number of digits
-	int m = getMax(arr, n);
 
-	// Do counting sort for every digit.
-	// Note that instead of passing digit
-	// number, exp is passed. exp is 10^i
-	// where i is current digit number
-	for (int exp = 1; m / exp > 0; exp *= 10)
-		countSort(arr, n, exp);
 }
+int main(){
 
-// A utility function to print an array
-void print(int arr[], int n)
-{
-	for (int i = 0; i < n; i++)
-		cout << arr[i] << " ";
-}
+     int arr[] = {5,4,3,2,3,2};
+    int size = sizeof(arr)/sizeof(int);
 
-// Driver Code
-int main()
-{
-	int arr[] = { 543, 986, 217, 765, 329 };
-	int n = sizeof(arr) / sizeof(arr[0]);
+    radixSort(arr,size);
 
-	// Function Call
-	radixsort(arr, n);
-	print(arr, n);
-	return 0;
+    for(int n:arr){
+        cout << n << " " ;
+    }cout << endl;
+
+    return 0;
 }
