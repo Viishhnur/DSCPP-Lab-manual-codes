@@ -116,79 +116,36 @@ int getMax(Node* root){
     return temp->val;
 }
 
-
-// int inOrderPredecessor(Node* root,Node* currNode){
-//     // get parent node of currNode
-//     // For that do inorder traversal , till u find current node
-//     Node* temp = root;
-
-//     while(temp!=currNode){
-        
-//     }
-
-// }
-
-
-Node* getLastRight(Node* root){
-    if(!root->right) return root;
-
-    return getLastRight(root->right);
-
+int getMinValue(Node* root){
+    Node* temp = root;
+    int minValue = temp->val;
+    while(temp->left!=NULL){
+        minValue = temp->left->val;
+        temp = temp->left;
+    }
+    return minValue;
 }
-Node* helper(Node* root){
 
-    // This helper makes useful in giving proper connections
-    if(!root->left) {
-        // Left child is not there , so return right subtree
-        return root->right;
+Node* deleteNode(Node* &root,int key){
+    if(!root) return root;
+    if(key < root->val){
+        root->left = deleteNode(root->left,key);
     }
-    else if(!root->right){
-        // Right subtree is not there , so return left subtree
-        return root->left;
+    else if(key > root->val){
+        root->right = deleteNode(root->right,key);
     }
-
-    // If both child are present i.e both left child are right child are there
-    Node* rightChild = root->right;
-    Node* lastRight = getLastRight(root->left);
-    lastRight = rightChild;
-    return root->left;
+    else{
+        if(root->left==nullptr) return root->right;
+        else if(root->right == nullptr) return root->left;
+        // CHange root ka data with its inorder successor
+        root->val = getMinValue(root->right);
+        root->right = deleteNode(root->right,root->val);
+    }
+    return root;
 
 
 }
-Node* DeleteNode(Node* root,int key){
-    if(!root) return nullptr;
-    if(root->val == key) return helper(root);
 
-    Node* dummy = root;
-    while(dummy){
-        if(key < root->val){
-            // So the key may be present in left most part
-            if(root->val && root->left->val == key){
-                root->left = helper(root->left);
-                break;
-            }else{
-                root = root->left;
-            }
-
-        }
-
-        else{
-
-            if(root->right && root->right->val){
-                root->right = helper(root->right);
-                break;
-            }else{
-                root = root->right;
-            }
-        }
-       
-
-
-    }
-
-    return dummy;
-
-}
 int main(){
 
     Node* root = NULL;
@@ -208,7 +165,9 @@ int main(){
 
     cout << "\nMinimum value in given BST is : " << getMin(root);
     cout << "\nMaximum value in given BST is : " << getMax(root) << endl;
-    root = DeleteNode(root,5);
+    
+    root = deleteNode(root,10);
+    cout << "BST after deleting 10: " ;
     printInOrder(root);
 
 
